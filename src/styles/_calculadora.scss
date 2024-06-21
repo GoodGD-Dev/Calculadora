@@ -1,0 +1,70 @@
+@use 'var';
+
+.main {
+  margin: 20 auto;
+  width: 320px;
+  background-color: var.$background;
+  list-style: none;
+  border: 2px solid var.$border;
+  border-radius: 10px;
+
+
+  button {
+    background-color: var.$buttons ;
+    border: 2px solid var.$border;
+    border-radius: 10px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: var.$hover;
+    }
+
+  }
+
+  .button {
+    margin: 5;
+    padding: 15;
+    &--zero {
+      margin: 5;
+      padding: 15 45;
+    }
+    &--plusequal {
+      padding: 10 40;
+    }
+  }
+
+  &__display {
+    padding: 20;
+    border-bottom: 2px solid black;
+    text-align: end;
+
+    &__number {
+      border: 2px dotted black;
+      background-color: var.$display;
+      padding: 20;
+    }
+  }
+  &__buttons {
+    display: flex;
+    justify-content: space-around;
+    padding: 10;
+
+    &__numbers {
+      width: 60%;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around;
+    }
+
+    &__functions {
+      width: 35%;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around;
+
+      button {
+        margin: 10;
+      }
+    }
+  }
+}
