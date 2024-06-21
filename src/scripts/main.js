@@ -17,18 +17,19 @@ document.addEventListener("DOMContentLoaded", () => {
           const operand2 = parseFloat(currentInput);
           const result = calculate(operand1, operand2, operator);
           display.innerText = result;
-          operand1 = result;
+          operand1 = parseFloat(result); // Atualiza operand1 com o novo resultado
           currentInput = "";
           operator = "";
         }
       } else if (["mais", "menos", "vezes", "dividir"].includes(button.id)) {
-        if (currentInput) {
+        if (currentInput !== "") {
           if (operand1 === null) {
             operand1 = parseFloat(currentInput);
-          } else {
+          } else if (operator && operand1 !== null) {
             const operand2 = parseFloat(currentInput);
-            operand1 = parseFloat(calculate(operand1, operand2, operator));
-            display.innerText = operand1.toString();
+            const result = calculate(operand1, operand2, operator);
+            display.innerText = result;
+            operand1 = parseFloat(result); // Atualiza operand1 com o novo resultado
           }
           operator = value;
           currentInput = "";
