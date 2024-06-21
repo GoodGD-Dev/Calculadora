@@ -1,59 +1,75 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const display = document.getElementById("resultado");
-  const buttons = document.querySelectorAll("button");
+const calculator = document.querySelector('.main');
+const display = document.querySelector('#resultado');
+const keys = calculator.querySelector('.main__buttons');
 
-  let currentInput = "";
-  let operator = "";
-  let operand1 = null;
+let firstValue = '';
+let operator = '';
+let secondValue = '';
+let shouldResetDisplay = false;
 
-  buttons.forEach(button => {
-    button.addEventListener("click", () => {
-      const value = button.innerText;
+keys.addEventListener('click', e => {
+  if (e.target.matches('button')) {
+    const key = e.target;
+    const action = key.dataset.action;
+    const keyContent = key.textContent;
+    const displayedNum = display.textContent;
 
-      if (button.id === "clear") {
-        clear();
-      } else if (button.id === "igual") {
-        if (operator && operand1 !== null && currentInput !== "") {
-          const operand2 = parseFloat(currentInput);
-          const result = calculate(operand1, operand2, operator);
-          display.innerText = result;
-          operand1 = parseFloat(result); // Atualiza operand1 com o novo resultado
-          currentInput = "";
-          operator = "";
-        }
-      } else if (["mais", "menos", "vezes", "dividir"].includes(button.id)) {
-        if (currentInput !== "") {
-          if (operand1 === null) {
-            operand1 = parseFloat(currentInput);
-          } else if (operator && operand1 !== null) {
-            const operand2 = parseFloat(currentInput);
-            const result = calculate(operand1, operand2, operator);
-            display.innerText = result;
-            operand1 = parseFloat(result); // Atualiza operand1 com o novo resultado
-          }
-          operator = value;
-          currentInput = "";
-        } else if (operand1 !== null) {
-          operator = value;
-        }
+    if (!action) {
+      // Se um número for pressionado
+      if (displayedNum === '0' || shouldResetDisplay) {
+        display.textContent = keyContent;
+        shouldResetDisplay = false;
       } else {
-        currentInput += value;
-        display.innerText = currentInput;
+        display.textContent = displayedNum + keyContent;
       }
-    });
-  });
+    }
 
-  function calculate(a, b, operator) {
-    if (operator === "+") return (a + b).toString();
-    if (operator === "-") return (a - b).toString();
-    if (operator === "*") return (a * b).toString();
-    if (operator === "/") return (a / b).toString();
-  }
+    if (action === 'decimal') {
+      if (!displayedNum.includes('.')) {
+        display.textContent = displayedNum + '.';
+      } else if (shouldResetDisplay) {
+        display.textContent = '0.';
+        shouldResetDisplay = false;
+      }
+    }
 
-  function clear() {
-    currentInput = "";
-    operator = "";
-    operand1 = null;
-    display.innerText = "0";
+    if (action === 'clear') {
+      display.textContent = '0';
+      firstValue = '';
+      operator = '';
+      secondValue = '';
+      shouldResetDisplay = false;
+    }
+
+    if (action === 'add' || action === 'subtract' || action === 'multiply' || action === 'divide') {
+      if (firstValue && operator && !shouldResetDisplay) {
+        secondValue = displayedNum;
+        display.textContent = calculate(firstValue, operator, secondValue);
+        firstValue = display.textContent;
+      } else {
+        firstValue = displayedNum;
+      }
+      operator = action;
+      shouldResetDisplay = true;
+    }
+
+    if (action === 'calculate') {
+      if (firstValue) {
+        secondValue = displayedNum;
+        display.textContent = calculate(firstValue, operator, secondValue);
+        firstValue = '';
+        operator = '';
+        shouldResetDisplay = true;
+      }
+    }
   }
 });
+
+function calculate(first, operator, second) {
+  const firstNum = parseFloat(first);
+  const secondNum = parseFloat(second);
+  if (operator === 'add') return firstNum + secondNum;
+  if (operator === 'subtract') return firstNum - secondNum;
+  if (operator === 'multiply') return firstNum * secondNum;
+  if (operator === 'divide') return firstNum / secondNum;
+}
